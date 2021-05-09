@@ -29,6 +29,7 @@ find_package(Qt5 ${Qt5_MIN_VERSION} COMPONENTS Core REQUIRED)
 find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
 	CoreAddons
 	KIO
+	JobWidgets
 )
 pkg_check_modules(FUSE3 REQUIRED fuse3)
 
@@ -57,7 +58,7 @@ ecm_qt_declare_logging_category(KIOFUSE_SOURCES
 add_executable(kio-fuse ${KIOFUSE_SOURCES})
 target_include_directories(kio-fuse PRIVATE ${FUSE3_INCLUDE_DIRS})
 target_compile_definitions(kio-fuse PRIVATE FUSE_USE_VERSION=31 ${FUSE3_CFLAGS_OTHER})
-target_link_libraries(kio-fuse PRIVATE Qt5::Core KF5::KIOCore ${FUSE3_LIBRARIES} ${FUSE3_LDFLAGS})
+target_link_libraries(kio-fuse PRIVATE Qt5::Core KF5::KIOCore KF5::JobWidgets ${FUSE3_LIBRARIES} ${FUSE3_LDFLAGS})
 install(TARGETS kio-fuse DESTINATION ${KDE_INSTALL_FULL_LIBEXECDIR})
 install(FILES kio-fuse-tmpfiles.conf DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/tmpfiles.d)
 
