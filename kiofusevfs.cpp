@@ -2121,7 +2121,10 @@ void KIOFuseVFS::awaitChildrenComplete(const std::shared_ptr<KIOFuseDirNode> &no
 		connect(job, &KIO::ListJob::result, [=] {
 			remoteNode->m_childrenRequested = false;
 
-			if(job->error() && job->error() != KJob::KilledJobError)
+			// If the node got deleted while listing, don't error out. Deleted nodes
+			// don't have any children anyway.
+			if(job->error()
+			   && remoteNode->m_parentIno != KIOFuseIno::DeletedRoot)
 			{
 				emit remoteNode->gotChildren(kioErrorToFuseError(job->error()));
 				return;
